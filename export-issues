@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+if ARGV.empty?
+  STDERR.puts "Usage:\n\n\t#{__FILE__} github-user/repo-name"
+  STDERR.puts "\nProvide authentication details via the GITHUB_USER and GITHUB_PASSWORD env vars."
+  exit 1
+end
+
+require 'octokit'
+
+# Provide authentication credentials
+Octokit.configure do |c|
+  c.login    = ENV['GITHUB_USER']
+  c.password = ENV['GITHUB_PASSWORD']
+end
