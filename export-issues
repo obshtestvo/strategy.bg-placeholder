@@ -6,10 +6,31 @@ if ARGV.empty?
   exit 1
 end
 
+repo = ARGV.first
+
 require 'octokit'
 
 # Provide authentication credentials
 Octokit.configure do |c|
-  c.login    = ENV['GITHUB_USER']
-  c.password = ENV['GITHUB_PASSWORD']
+  c.login         = ENV['GITHUB_USER']
+  c.password      = ENV['GITHUB_PASSWORD']
+  c.auto_paginate = true
+end
+
+issues = Octokit.issues(repo, state: 'open')
+
+puts "# #{repo}"
+
+issues.sort_by(&:number).each do |issue|
+  puts "## #{issue.number}. #{issue.title}"
+  puts "\n#{issue.body}"
+
+  if issue.comments > 0
+    issue.rels[:comments].get.data.each do |comment|
+      puts "\n### Коментар от #{comment.user.login}"
+      puts "\n#{comment.body}"
+    end
+  end
+
+  puts
 end
