@@ -1,0 +1,11 @@
+#!/bin/bash
+
+for file in "$@"; do
+	pandoc -N \
+		--latex-engine=xelatex \
+		--variable mainfont=Georgia \
+		--variable sansfont=Arial \
+		--variable monofont="Bitstream Vera Sans Mono" \
+		--variable fontsize=12pt \
+		-o $file.pdf $file
+done
